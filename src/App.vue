@@ -22,47 +22,39 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: "App",
-  data() {
-    return {
-      userTheme: "light-theme",
-    };
-  },
-  methods: {
-    setTheme(theme) {
-      localStorage.setItem("user-theme", theme);
-      this.userTheme = theme;
-      document.documentElement.className = theme;
-    },
+<script setup>
+import {onMounted, ref} from "vue";
 
-    toggleTheme() {
-      const activeTheme = localStorage.getItem("user-theme");
-      if (activeTheme === "light-theme") {
-        this.setTheme("dark-theme");
-      } else {
-        this.setTheme("light-theme");
-      }
-    },
-    getMediaPreference() {
-      const hasDarkPreference = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-      ).matches;
-      if (hasDarkPreference) {
-        return "dark-theme";
-      } else {
-        return "light-theme";
-      }
-    },
+const userTheme = ref("light-theme")
 
-  },
-  mounted() {
-    const initUserTheme = this.getMediaPreference();
-    this.setTheme(initUserTheme);
-  },
+const setTheme = (theme) => {
+  localStorage.setItem("user-theme", theme);
+  userTheme.value = theme
+  document.documentElement.className = theme;
+}
 
-};
+const toggleTheme = () => {
+  const activeTheme = localStorage.getItem("user-theme");
+  if (activeTheme === "light-theme") {
+    setTheme("dark-theme")
+  } else {
+    setTheme("light-theme")
+  }
+}
+const getMediaPreference = () => {
+  const hasDarkPreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (hasDarkPreference) {
+    return "dark-theme";
+  } else {
+    return "light-theme";
+  }
+}
+//hooks
+onMounted(() => {
+  const initUserTheme = getMediaPreference();
+  setTheme(initUserTheme);
+})
+
 </script>
 
 <style>
