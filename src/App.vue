@@ -49,10 +49,15 @@ const getMediaPreference = () => {
     return "light-theme";
   }
 }
-//hooks
+
 onMounted(() => {
-  const initUserTheme = getMediaPreference();
-  setTheme(initUserTheme);
+  const currentTheme = localStorage.getItem('user-theme');
+  if (currentTheme !== null) {
+    setTheme(currentTheme);
+  } else {
+    const initUserTheme = getMediaPreference();
+    setTheme(initUserTheme);
+  }
 })
 
 </script>
